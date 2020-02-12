@@ -1,0 +1,8 @@
+requirements:
+
+pip install google-search
+
+
+usage>>
+
+python goosint.py -t target.com -m 1
