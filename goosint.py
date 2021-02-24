@@ -1,5 +1,3 @@
-#pip install google
-
 from googlesearch import search
 from argparse import ArgumentParser
 import os
@@ -24,7 +22,7 @@ def insertResultsInFile(result, filename):
         except IOError:
                 print("error writing file")
 def banner():
-        print("=======================================================================\n")
+        print("\n\n=======================================================================\n")
         print("Goosint by Juan Cruz Tommasi - Base4 Security - www.base4sec.com\n")
         print("=======================================================================\n\n")
         print("Results in a minute, please wait..\n\n")
@@ -43,8 +41,7 @@ def utfEncodeAndLinesToArray(filename):
 parser = ArgumentParser(description='Goosint by Juan Cruz Tommasi - Base4 Security - www.base4sec.com')
 
 parser.add_argument('-t', '--target', type=str, metavar='', help='Target')
-parser.add_argument('-m', '--mode', type=int, metavar='', required=False, help='1-Subdomain 2-Passwords 3-FileExtension 4-IndexOfDirectories 5-WebList')
-parser.add_argument('-r', '--results', type=int, metavar='', required=False, help='Results per page')
+parser.add_argument('-m', '--mode', type=int, metavar='',default=0 ,required=False, help='1-Subdomain 2-Passwords 3-FileExtension 4-IndexOfDirectories, (default 0: weblist)')
 parser.add_argument('-E', '--ext', type=str, metavar='', help='File extension')
 parser.add_argument('-C', '--country', type=str, metavar='', help='Specify a country', default='')
 parser.add_argument('-D', '--dorksource', type=str, metavar='', default=False, help='Multiple Queryies, Multiple dorks - MASSIVE INFO')
@@ -56,10 +53,12 @@ results = []
 query = ''
 fn = ''
 
-def searchCall(query, list):
-    for result in search(query, num=args.results, start=0, stop=0, pause=46.3, country=args.country):
+def searchCall(query):
+    iterator = 0
+    for result in search(query, num_results=100,lang="es"):
             insertResultsInFile(result, "log.txt")
-            print(result)
+            iterator = iterator + 1
+            print('[' + str(iterator) + '] - ' + result)
     pass
 
 if args.mode == 1:
@@ -82,8 +81,8 @@ elif args.mode == 3:
     else:
             sys.exit("Declara por favor una extension para los archivos a listar con -E --ext\n")
 
-elif args.mode == 5:
-    query = '%s @%s' % (args.target,args.target)
+elif args.mode == 0:
+    query = '%s' % (args.target)
     pass
 
 ######################
@@ -103,9 +102,9 @@ if args.dorksource != False:
             time.sleep(safeSearchTime)
             sleeptimeAcc = sleeptimeAcc + safeSearchTime
         print("[*] Scraping websites from: %s", dork)
-        searchCall(dork, 600)
+        searchCall(dork)
 else:
     if len(query) != 0:
-        searchCall(query, 600)
+        searchCall(query)
     else:
         print("[!] No query Specified")
