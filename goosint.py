@@ -56,7 +56,8 @@ fn = ''
 def searchCall(query):
     iterator = 0
     for result in search(query, num_results=100,lang="es"):
-            insertResultsInFile(result, "log.txt")
+            if args.save:
+                insertResultsInFile(result, "log.txt")
             iterator = iterator + 1
             print('[' + str(iterator) + '] - ' + result)
     pass
